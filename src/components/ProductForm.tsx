@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { Alert, AlertDescription } from "./ui/alert";
+import { Input } from "./ui/input";
 
 type Product = {
   name: string;
@@ -133,7 +134,7 @@ export default function ProductTable() {
             <TableRow key={i}>
               <TableCell>{i + 1}</TableCell>
               <TableCell>
-                <input
+                <Input
                   className="border px-2 py-1 w-full rounded"
                   value={product.name}
                   onChange={(e) => handleChange(i, "name", e.target.value)}
@@ -142,8 +143,8 @@ export default function ProductTable() {
               </TableCell>
               <TableCell>
                 {product.categories.map((category, j) => (
-                  <div key={j} className="flex items-center gap-2 mb-2">
-                    <input
+                  <div key={j} className="flex items-center gap-2 mb-2 mt-2">
+                    <Input
                       className="border px-2 py-1 w-full rounded"
                       value={category.name}
                       onChange={(e) => {
