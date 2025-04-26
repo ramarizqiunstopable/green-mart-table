@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FiPlus, FiTrash, FiX } from "react-icons/fi";
+import { FiPlus, FiTrash } from "react-icons/fi";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,7 +19,6 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { Alert, AlertDescription } from "./ui/alert";
-import { Terminal } from "lucide-react";
 
 type Product = {
   name: string;
