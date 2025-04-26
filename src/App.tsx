@@ -1,5 +1,5 @@
 import ProductForm from "./components/ProductForm";
-import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <div className="min-h-screen  bg-gray-100">
