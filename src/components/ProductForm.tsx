@@ -192,7 +192,7 @@ export default function ProductTable() {
                 ))}
               </TableCell>
               <TableCell>
-                {product.categories.map((category, j) => (
+                {product.categories.map((_category, j) => (
                   <div key={j} className="space-y-2 flex gap-2  ">
                     <Button
                       size="sm"
