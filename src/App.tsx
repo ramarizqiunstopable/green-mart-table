@@ -1,4 +1,4 @@
-import ProductForm from "./components/ProductTable";
+import ProductTable from "./components/tableProduct";
 
 function App() {
   return (
@@ -7,7 +7,7 @@ function App() {
         Table Product Green Mart 🌱
       </h1>
       <div className="min-h-screen  bg-gray-100 p-10">
-        <ProductForm />
+        <ProductTable />
       </div>
     </div>
   );

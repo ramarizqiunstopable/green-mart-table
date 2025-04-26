@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,112 +8,30 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { FiPlus, FiTrash } from "react-icons/fi";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "./ui/alert-dialog";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Input } from "./ui/input";
-
-type Product = {
-  name: string;
-  description: string;
-  categories: { name: string; image: File | null; preview: string | null }[];
-};
+import { Input } from "../ui/input";
+import { useProductLogic } from "./useProductLogic";
+import AlertDialogHapusProduct from "./AlertDialogHapusProduct";
+import AlertDialogHapusGambar from "./AlertDialogHapusGambar";
+import { Alert, AlertDescription } from "../ui/alert";
 
 export default function ProductTable() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      name: "",
-      description: "",
-      categories: [{ name: "", image: null, preview: null }],
-    },
-  ]);
-  const [confirmProductIndex, setConfirmProductIndex] = useState<number | null>(
-    null
-  );
-  const [confirmCategoryIndex, setConfirmCategoryIndex] = useState<{
-    productIndex: number;
-    categoryIndex: number;
-  } | null>(null);
-
-  const maxCategories = 3;
-  const maxProducts = 5;
-
-  const addProduct = () => {
-    if (products.length < maxProducts) {
-      setProducts([
-        ...products,
-        {
-          name: "",
-          description: "",
-          categories: [{ name: "", image: null, preview: null }],
-        },
-      ]);
-    }
-  };
-
-  const removeProduct = (index: number) => {
-    const updated = [...products];
-    updated.splice(index, 1);
-    setProducts(updated);
-    setConfirmProductIndex(null);
-  };
-
-  const addCategory = (productIndex: number) => {
-    const updated = [...products];
-    if (updated[productIndex].categories.length < maxCategories) {
-      updated[productIndex].categories.push({
-        name: "",
-        image: null,
-        preview: null,
-      });
-      setProducts(updated);
-    }
-  };
-
-  const removeCategory = (productIndex: number, categoryIndex: number) => {
-    const updated = [...products];
-    updated[productIndex].categories.splice(categoryIndex, 1);
-    setProducts(updated);
-  };
-
-  const handleChange = (
-    index: number,
-    field: "name" | "description",
-    value: string
-  ) => {
-    const updated = [...products];
-    updated[index][field] = value;
-    setProducts(updated);
-  };
-
-  const handleImage = (
-    productIndex: number,
-    categoryIndex: number,
-    file: File
-  ) => {
-    const updated = [...products];
-    updated[productIndex].categories[categoryIndex].image = file;
-    updated[productIndex].categories[categoryIndex].preview =
-      URL.createObjectURL(file);
-    setProducts(updated);
-  };
-
-  const handleRemoveImage = () => {
-    if (confirmCategoryIndex === null) return;
-    const updated = [...products];
-    const { productIndex, categoryIndex } = confirmCategoryIndex;
-    updated[productIndex].categories[categoryIndex].image = null;
-    updated[productIndex].categories[categoryIndex].preview = null;
-    setProducts(updated);
-    setConfirmCategoryIndex(null);
-  };
+  const {
+    products,
+    addProduct,
+    removeProduct,
+    addCategory,
+    removeCategory,
+    handleChange,
+    handleCategoryChange,
+    handleImage,
+    handleRemoveImage,
+    confirmProductIndex,
+    setConfirmProductIndex,
+    confirmCategoryIndex,
+    setConfirmCategoryIndex,
+    maxCategories,
+    maxProducts,
+  } = useProductLogic();
 
   return (
     <div className="p-4">
@@ -138,7 +55,7 @@ export default function ProductTable() {
                   className="border px-2 py-1 w-full rounded"
                   value={product.name}
                   onChange={(e) => handleChange(i, "name", e.target.value)}
-                  placeholder="Nama produk"
+                  placeholder="Nama Produk"
                 />
               </TableCell>
               <TableCell>
@@ -148,9 +65,7 @@ export default function ProductTable() {
                       className="border px-2 py-1 w-full rounded"
                       value={category.name}
                       onChange={(e) => {
-                        const updated = [...products];
-                        updated[i].categories[j].name = e.target.value;
-                        setProducts(updated);
+                        handleCategoryChange(i, j, e.target.value);
                       }}
                       placeholder="Nama kategori"
                     />
@@ -194,7 +109,7 @@ export default function ProductTable() {
               </TableCell>
               <TableCell>
                 {product.categories.map((_category, j) => (
-                  <div key={j} className="space-y-2 flex gap-2  ">
+                  <div key={j} className="space-y-2 flex gap-2">
                     <Button
                       size="sm"
                       variant="ghost"
@@ -257,67 +172,16 @@ export default function ProductTable() {
         </TableBody>
       </Table>
 
-      {/* Dialog Hapus Produk */}
-      {confirmProductIndex !== null && (
-        <AlertDialog
-          open={confirmProductIndex !== null}
-          onOpenChange={() => setConfirmProductIndex(null)}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Apakah Anda Yakin untuk Menghapus Produk Ini?
-              </AlertDialogTitle>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel
-                className="text-white"
-                style={{ backgroundColor: "#808080" }}
-              >
-                Batalkan
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => removeProduct(confirmProductIndex)}
-                className="text-white"
-                style={{ backgroundColor: "#D22B2B" }}
-              >
-                Hapus
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-
-      {/* Dialog Hapus Gambar Kategori */}
-      {confirmCategoryIndex !== null && (
-        <AlertDialog
-          open={confirmCategoryIndex !== null}
-          onOpenChange={() => setConfirmCategoryIndex(null)}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Apakah Anda Yakin untuk Menghapus Gambar Kategori Ini?
-              </AlertDialogTitle>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel
-                className="text-white"
-                style={{ backgroundColor: "#808080" }}
-              >
-                Batalkan
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleRemoveImage}
-                className="text-white"
-                style={{ backgroundColor: "#D22B2B" }}
-              >
-                Hapus
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <AlertDialogHapusProduct
+        confirmProductIndex={confirmProductIndex}
+        setConfirmProductIndex={setConfirmProductIndex}
+        removeProduct={removeProduct}
+      />
+      <AlertDialogHapusGambar
+        confirmCategoryIndex={confirmCategoryIndex}
+        setConfirmCategoryIndex={setConfirmCategoryIndex}
+        handleRemoveImage={handleRemoveImage}
+      />
     </div>
   );
 }
