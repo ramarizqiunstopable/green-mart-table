@@ -6,7 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog";
+} from "../../ui/alert-dialog";
 
 type AlertDialogHapusGambarProps = {
   confirmCategoryIndex: { productIndex: number; categoryIndex: number } | null;

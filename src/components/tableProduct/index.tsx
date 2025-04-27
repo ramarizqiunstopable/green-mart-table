@@ -9,9 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { Input } from "../ui/input";
-import { useProductLogic } from "./useProductLogic";
-import AlertDialogHapusProduct from "./AlertDialogHapusProduct";
-import AlertDialogHapusGambar from "./AlertDialogHapusGambar";
+import { useProductLogic } from "./hooks/useProductLogic";
+import AlertDialogHapusProduct from "./components/AlertDialogHapusProduct";
+import AlertDialogHapusGambar from "./components/AlertDialogHapusGambar";
 import { Alert, AlertDescription } from "../ui/alert";
 
 export default function ProductTable() {
